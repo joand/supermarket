@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 @Service
@@ -14,18 +15,20 @@ class PricerService implements Pricer {
 
     @Override
     public double computePrice(Basket basket) {
-        double totalPrice = 0;
+        BigDecimal totalPrice = BigDecimal.ZERO;
         for (Map.Entry<Item, Long> entry : basket.getContent().entrySet()) {
             Item item = entry.getKey();
             Long occurrence = entry.getValue();
-            totalPrice += computePrice(item, occurrence);
+            double itemPrice = computePrice(item, occurrence);
+            BigDecimal bigDecimal = BigDecimal.valueOf(itemPrice);
+            totalPrice = totalPrice.add(bigDecimal);
         }
-        return totalPrice;
+        return totalPrice.doubleValue();
     }
 
     @Override
     public double computePrice(Item item, long occurrence) {
-        logger.info("computePrice for item : {}, occurrence : {}", item, occurrence);
+        logger.info("{} {}(s) for the price of {}", item.getCurrentOccurence(), item.name(), item.getChargedOccurence());
 
         double ndOfSpecialOffer = Math.floor(occurrence / item.getCurrentOccurence());
         logger.info("ndOfSpecialOffer : {}", ndOfSpecialOffer);
