@@ -1,6 +1,7 @@
 package fr.joand.supermarket.core;
 
 import fr.joand.supermarket.Application;
+import fr.joand.supermarket.model.Basket;
 import fr.joand.supermarket.model.Item;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.time.LocalDateTime;
 
 import static org.junit.Assert.assertEquals;
 
@@ -21,7 +24,16 @@ public class PricerTest {
 
     @Test
     public void computePriceBasket() {
-// todo
+        double expectedPrice = 0.4 + 1.5 + 3.2;
+
+        Basket basket = new Basket();
+        basket.getContent().put(Item.apple, Long.valueOf(4));
+        basket.getContent().put(Item.orange, Long.valueOf(3));
+        basket.getContent().put(Item.watermelon, Long.valueOf(5));
+        double actualPrice = pricer.computePrice(basket);
+
+        double delta = 0;
+        assertEquals(expectedPrice, actualPrice, delta);
     }
 
     @Test
